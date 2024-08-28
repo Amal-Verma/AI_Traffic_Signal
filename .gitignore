@@ -19,4 +19,4 @@ model1/yolov5/experiments/
 myvenv/
 
 # Ignore test jupyter notebooks
-model1/my_test.ipynb
+my_test.ipynb
