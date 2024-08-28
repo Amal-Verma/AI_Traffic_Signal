@@ -1,0 +1,22 @@
+# Ignore Python bytecode
+*.pyc
+__pycache__/
+
+# Ignore environment files
+.env
+
+# Ignore log files
+*.log
+
+# Ignore local configuration files
+.vscode/
+
+# Ignore yolov5-specific files
+model1/yolov5/weights/
+model1/yolov5/experiments/
+
+# Ignore virtual environment
+myvenv/
+
+# Ignore test jupyter notebooks
+model1/my_test.ipynb
