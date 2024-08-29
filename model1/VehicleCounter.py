@@ -1,6 +1,4 @@
 import torch
-from PIL import Image
-from matplotlib import pyplot as plt
 
 class VehicleCounter:
   def __init__(self,conf_thres=0.15,cnt_ratio=[1,2,3]):
