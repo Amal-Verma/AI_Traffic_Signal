@@ -11,8 +11,11 @@ PURPLE = (255, 0, 255)
 
 class Vehicle:
     def __init__(self, config={}):
+        # self.roadIndex = roadIndex
         # Set default configuration
+
         self.set_default_config()
+
 
         # Update configuration
         for attr, val in config.items():
@@ -30,6 +33,8 @@ class Vehicle:
         # bus: 0.05
         # motorcycle: 0.7
         self.vehicleType = np.random.choice(vehicleTypes, p=[1, 0, 0, 0])
+        # self.vehicleType = vehicleTypes[self.roadIndex % 4]
+        # print(self.vehicleType)
         if(self.vehicleType == "car"):
             self.l = 3
             self.h = 2

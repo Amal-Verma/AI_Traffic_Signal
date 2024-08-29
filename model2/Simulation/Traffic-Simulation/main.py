@@ -11,8 +11,8 @@ b = 12      # Indicates point b
 l = 300     # Length of road
 
 NUM_OF_ROADS = 36 # Number of roads
-VEHICLE_RATE = 800 # Vehicle spawn rate per minute
-STEPS_PER_UPDATE = 2   # Number of steps per update
+VEHICLE_RATE = 100 # Vehicle spawn rate per minute
+STEPS_PER_UPDATE = 4   # Number of steps per update
 
 # Nodes
 WEST_RIGHT_START = (-b-l, a)

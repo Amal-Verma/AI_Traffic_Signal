@@ -16,8 +16,8 @@ class Window:
         
     def set_default_config(self):
         """Set default configuration"""
-        self.width = 1400
-        self.height = 900
+        self.width = 1200
+        self.height = 700
         self.bg_color = (250, 250, 250)
 
         self.fps = 60
@@ -310,6 +310,8 @@ class Window:
         text_total_vehicles = self.text_font.render(f'Total Vehicles={vehicles_passed + self.sim.vehiclesPresent}', False, (0, 0, 0))
         text_vehicle_rate = self.text_font.render(f'Vehicle Rate={self.sim.vehicleRate}', False, (0, 0, 0))
 
+        roadformat = lambda x, y: self.text_font.render(f'{x} = {y}', False, (0, 0, 0))
+        # vehicleRoadIndex = self.text_font.render(f'Road Index = {self.sim.generators[0].roadIndexs}', False, (0, 0, 0))
         #add white rectangle
         self.screen.fill((255, 255, 255), (0, 0, 1400, 40))
         self.screen.blit(text_fps, (0, 0))
@@ -319,6 +321,23 @@ class Window:
         self.screen.blit(text_average_vehicles_per_minute, (630, 0))
         self.screen.blit(text_total_vehicles, (0, 20))
         self.screen.blit(text_vehicle_rate, (200, 20))
+
+        # self.screen.blit(vehicleRoadIndex, (400, 20))
+
+        temp = 0
+        newRoads = [[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]]
+        newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in newRoads]
+        # self.sim.carCount = newRoads
+        self.sim.update_cars_count(newRoads)
+        for i in range(len(newRoads)):
+            # road = newRoads[i]
+            # print(len(self.sim.roads))
+            cap = 30
+            r = temp // cap
+            c = temp % cap
+            # if len(road.vehicles) > 0:
+            self.screen.blit(roadformat(f'Road {i} Vehicles', newRoads[i]), (50 + 300 * r, 60 + 20*c))
+            temp += 1
 
         if self.sim.isPaused:
             text_pause = self.text_font.render(f'Play', False, (0, 0, 0))
