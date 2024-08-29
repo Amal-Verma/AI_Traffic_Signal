@@ -1,7 +1,16 @@
-import random
+import sys
+import os
+
+# Add the path to the 'Algorithm' directory
+sys.path.insert(1, os.path.abspath(os.path.join(__file__, './../../../../Algorithm')))
+
+# Now import the CycleCalc module
+import CycleCalc
+
 
 class TrafficSignal:
     def __init__(self, roads, config={}):
+        self.model2 = CycleCalc.Manager()
         # Initialize roads
         self.roads = roads
         # Set default configuration
@@ -14,7 +23,10 @@ class TrafficSignal:
         self.init_properties()
 
     def set_default_config(self):
-        self.cycle = [(True, False, False, False), (False, True, False, False), (False, False, True, False), (False, False, False, True)]
+        # self.cycle = [(True, False, False, False), (False, True, False, False), (False, False, True, False), (False, False, False, True)]
+        self.cycle = [(True, True, True, True)]
+        self.timer = [(i + 1) / 2 for i in range(len(self.cycle))]
+
         self.slow_distance = 50
         self.slow_factor = 0.4
         self.stop_distance = 12
@@ -36,13 +48,21 @@ class TrafficSignal:
         return self.cycle[self.current_cycle_index]
     
     def update(self, sim):
-        self.cycle_count += 1
+        self.model2.counter += (1 / 60)
+        # print(self.timer)
         # randomize the cycle length after every cycle
-        if(self.cycle_count % self.cycle_length == 0):
-            self.cycle_length = random.randint(200, 400)
-            self.cycle_count = 0
+        if(self.model2.counter > self.timer[self.current_cycle_index]):
+            # self.cycle_length = 5
+            # self.cycle_count = 0
         # k = (sim.t // cycle_length) % 4
+            self.current_cycle_index = self.current_cycle_index + 1
+            if self.current_cycle_index >= len(self.cycle):
+                self.current_cycle_index = 0
+                self.model2.counter = 0
 
-            self.current_cycle_index = (self.current_cycle_index + 1) % len(self.cycle)
+                self.cycle, self.timer = self.model2.call(sim.carsCount)
+                # print(self.cycle)
+                # print(self.timer)
+
         if(len(self.roads) < 4):
             self.current_cycle_index = 3

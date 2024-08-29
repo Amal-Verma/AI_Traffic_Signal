@@ -11,12 +11,17 @@ class Simulation:
     isPaused = False;
 
     def __init__(self, config={}):
+        self.carsCount = [0,0,0,0]
+
         # Set default configuration
         self.set_default_config()
 
         # Update configuration
         for attr, val in config.items():
             setattr(self, attr, val)
+    
+    def update_cars_count(self, carsCount):
+        self.carsCount = carsCount
 
     def set_default_config(self):
         self.t = 0.0            # Time keeping
@@ -94,8 +99,8 @@ class Simulation:
             Simulation.vehiclesPresent += len(road.vehicles)
 
         # Increment time
-        # self.t += self.dt
-        # self.frame_count += 1
+        self.t += self.dt
+        self.frame_count += 1
 
         # Stop at certain time in seconds (for sampling purposes. Comment out if not needed)
         # self.time_limit = 300
