@@ -24,7 +24,7 @@ class TrafficSignal:
 
     def set_default_config(self):
         # self.cycle = [(True, False, False, False), (False, True, False, False), (False, False, True, False), (False, False, False, True)]
-        self.cycle = [(True, True, True, True)]
+        self.cycle = [(True, True, True, True, True, True, False, False, False, False, False, False),]
         self.timer = [(i + 1) / 2 for i in range(len(self.cycle))]
 
         self.slow_distance = 50
@@ -49,6 +49,7 @@ class TrafficSignal:
     
     def update(self, sim):
         self.model2.counter += (1 / 60)
+        print(round(self.model2.counter, 4), self.current_cycle_index, end='\r')
         # print(self.timer)
         # randomize the cycle length after every cycle
         if(self.model2.counter > self.timer[self.current_cycle_index]):

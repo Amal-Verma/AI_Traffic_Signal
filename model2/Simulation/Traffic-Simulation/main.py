@@ -328,7 +328,8 @@ sim.create_gen({
 # sim.create_signal([[26]])
 # sim.create_signal([[27]])
 
-sim.create_signal([[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]])
+# sim.create_signal([[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]])
+sim.create_signal([[0], [12], [24], [3], [15], [27], [2], [14], [26], [1], [13], [25]])
 
 # Start simulation
 win = Window(sim)
