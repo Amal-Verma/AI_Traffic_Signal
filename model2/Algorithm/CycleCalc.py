@@ -1,11 +1,13 @@
 class Manager:
   def __init__(self):
       # print("Manager initialized")
-      self.counter = 0
-      self.cycle_time = 100
-      self.min_time = 5
-      self.max_time = 30
-      self.halt_time = 1
+    self.test = 5
+
+    self.counter = 0
+    self.cycle_time = 100 / self.test
+    self.min_time = 5 / self.test
+    self.max_time = 30 / self.test
+    self.halt_time = 1 / self.test
 
 
   def call(self, cars):

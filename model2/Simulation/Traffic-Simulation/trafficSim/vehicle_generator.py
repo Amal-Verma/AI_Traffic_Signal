@@ -15,10 +15,20 @@ class VehicleGenerator:
 
         # self.count = 0
         # self.countInterval = 1500
-        self.roadIndexs = [[1, 2, 3, 4, 21, 22, 23, 24, 41, 42, 43], 
-                           [5, 6, 7, 8, 25, 26, 27, 28, 44, 45, 46],
-                           [9, 10, 11, 12, 13, 14, 29, 30, 31, 32, 33, 34, 47, 48, 49, 50],
-                           [15, 16, 17, 18, 19, 20, 35, 36, 37, 38, 39, 40, 51, 52, 53, 54]]
+        # self.roadIndexs = [[1, 2, 3, 4, 21, 22, 23, 24, 41, 42, 43], 
+        #                    [5, 6, 7, 8, 25, 26, 27, 28, 44, 45, 46],
+        #                    [9, 10, 11, 12, 13, 14, 29, 30, 31, 32, 33, 34, 47, 48, 49, 50],
+        #                    [15, 16, 17, 18, 19, 20, 35, 36, 37, 38, 39, 40, 51, 52, 53, 54]]
+        
+        # self.roadIndexs = [[3, 4, 21, 22, 41, 42, 43], 
+        #                    [7, 8, 25, 26, 44, 45, 46],
+        #                    [12, 13, 14, 29, 30, 31, 47, 48, 49, 50],
+        #                    [18, 19, 20, 35, 36, 37, 51, 52, 53, 54]]
+        
+        self.roadIndexs = [[3, 21, 22, 41], 
+                           [7, 25, 26, 44],
+                           [12, 29, 30, 47],
+                           [18, 35, 36, 51]]
 
         # Calculate properties
         self.init_properties()
@@ -38,7 +48,7 @@ class VehicleGenerator:
         """Returns a random vehicle from self.vehicles with random proportions"""
         total = sum(pair[0] for pair in self.vehicles)
         # r = randint(1, total+1)
-        rLane = self.roadIndexs[choice(range(len(self.roadIndexs)), p=[0.75, 0.00, 0.00, 0.25])]
+        rLane = self.roadIndexs[choice(range(len(self.roadIndexs)), p=[0.55, 0.10, 0.10, 0.25])]
         r = choice(rLane)
         # print(r, total)
 
