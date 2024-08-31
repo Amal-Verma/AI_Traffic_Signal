@@ -1,7 +1,7 @@
 class Manager:
   def __init__(self):
       # print("Manager initialized")
-    self.test = 5
+    self.test = 1
 
     self.counter = 0
     self.cycle_time = 100 / self.test
@@ -14,25 +14,25 @@ class Manager:
       # print("Manager called")
       # print(cars)
       cycle = [
-          (False, True, True, False, False, True, False, True, True, False, False, True),
-          (False, False, True, False, False, True, False, False, True, False, False, True),
-          (False, False, True, False, True, True, False, False, True, False, True, True),
-          (False, False, True, False, False, True, False, False, True, False, False, True),
-          (True, True, True, False, False, True, False, False, True, False, False, True),
-          (False, False, True, False, False, True, False, False, True, False, False, True),
-          (False, False, True, True, True, True, False, False, True, False, False, True),
-          (False, False, True, False, False, True, False, False, True, False, False, True),
-          (False, False, True, False, False, True, True, True, True, False, False, True),
-          (False, False, True, False, False, True, False, False, True, False, False, True),
-          (False, False, True, False, False, True, False, False, True, True, True, True),
-          (False, False, True, False, False, True, False, False, True, False, False, True),
+          (False, True, False, False, False, False, False, True, False, False, False, False),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, False, False, True, False, False, False, False, False, True, False),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (True, True, True, False, False, False, False, False, False, False, False, True),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, True, True, True, True, False, False, False, False, False, False),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, False, False, False, True, True, True, True, False, False, False),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, False, False, False, False, False, False, True, True, True, True),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
       ]
 
       if (sum(cars) == 0):
-          return [(True,True,True,False,False,True,False,False,True,False,False,True),(False,False,True,True,True,True,False,False,True,False,False,True),(False,False,True,False,False,True,True,True,True,False,False,True),(False,False,True,False,False,True,False,False,False,True,True,True),], self.prefix_sum([self.cycle_time/len(cars)]*len(cars))
+          return cycle, self.prefix_sum([self.helper([1,1],(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1],(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1,1,1],2*(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1,1,1],2*(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1,1,1],2*(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1,1,1],2*(self.cycle_time-6*self.halt_time)/3)[0],1])
 
-      t1 = self.helper([cars[0]+cars[2],cars[1]+cars[3]],(self.cycle_time-8*self.halt_time)/2)
-      t2 = self.helper(cars,(self.cycle_time-8*self.halt_time)/2)
+      t1 = self.helper([cars[0]+cars[2],cars[1]+cars[3]],(self.cycle_time-6*self.halt_time)/3)
+      t2 = self.helper(cars,2*(self.cycle_time-6*self.halt_time)/3)
       timer = [t1[0],self.halt_time,t1[1],self.halt_time,t2[0],self.halt_time,t2[1],self.halt_time,t2[2],self.halt_time,t2[3],self.halt_time]
       
       print(timer, cars)
