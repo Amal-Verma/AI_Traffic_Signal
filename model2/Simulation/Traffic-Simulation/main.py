@@ -336,6 +336,6 @@ sim.create_signal([[0], [12], [24], [3], [15], [27], [2], [14], [26], [1], [13],
 
 # Start simulation
 win = Window(sim)
-win.zoom = 10
+win.zoom = 4.5
 if(sim.isPaused == False):
     win.run(steps_per_update=STEPS_PER_UPDATE)
