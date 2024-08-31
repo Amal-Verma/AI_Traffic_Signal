@@ -5,7 +5,7 @@ class Manager:
 
     self.counter = 0
     self.cycle_time = 100 / self.test
-    self.min_time = 5 / self.test
+    self.min_time = 2.5 / self.test
     self.max_time = 30 / self.test
     self.halt_time = 1
 
@@ -27,6 +27,11 @@ class Manager:
           (False, False, False, False, False, False, False, False, True, True, True, True),
           (False, False, False, False, False, False, False, False, False, False, False, False),
       ]
+
+    #   timer = [(self.cycle_time - self.halt_time * 6)/6]*12
+    #   timer[1::2] = [self.halt_time]*6
+    #   timer = self.prefix_sum(timer)
+    #   return cycle, timer
 
       if (sum(cars) == 0):
           return [12*(False,)], self.prefix_sum([self.cycle_time/10])
