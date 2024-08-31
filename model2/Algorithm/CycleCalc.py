@@ -29,7 +29,7 @@ class Manager:
       ]
 
       if (sum(cars) == 0):
-          return cycle, self.prefix_sum([self.helper([1,1],(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1],(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1,1,1],2*(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1,1,1],2*(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1,1,1],2*(self.cycle_time-6*self.halt_time)/3)[0],1,self.helper([1,1,1,1],2*(self.cycle_time-6*self.halt_time)/3)[0],1])
+          return [12*(False,)], self.prefix_sum([self.cycle_time/10])
 
       t1 = self.helper([cars[0]+cars[2],cars[1]+cars[3]],(self.cycle_time-6*self.halt_time)/3)
       t2 = self.helper(cars,2*(self.cycle_time-6*self.halt_time)/3)
