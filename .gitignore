@@ -20,3 +20,8 @@ myvenv/
 
 # Ignore test jupyter notebooks
 my_test.ipynb
+
+.venv
+.venv/
+
+yolov5s.pt
