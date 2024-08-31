@@ -1,8 +1,11 @@
 import numpy as np
 from trafficSim import *
 import csv
+import configCustom
 
 sim = Simulation()
+
+customConfig = configCustom.config()
 
 # Play with these
 n = 20      # Iterations for road turns
@@ -11,7 +14,7 @@ b = 12      # Indicates point b
 l = 300     # Length of road
 
 NUM_OF_ROADS = 36 # Number of roads
-VEHICLE_RATE = 100 # Vehicle spawn rate per minute
+VEHICLE_RATE = customConfig.vehicle_rate # Vehicle spawn rate per minute
 STEPS_PER_UPDATE = 4   # Number of steps per update
 
 # Nodes

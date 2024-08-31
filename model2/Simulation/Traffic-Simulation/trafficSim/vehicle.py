@@ -1,4 +1,7 @@
 import numpy as np
+import sys, os
+sys.path.insert(1, os.path.abspath(os.path.join(__file__, './../')))
+import configCustom
 
 # Define Colors as constants
 RED = (255, 0, 0)
@@ -13,9 +16,9 @@ class Vehicle:
     def __init__(self, config={}):
         # self.roadIndex = roadIndex
         # Set default configuration
+        self.configCustom = configCustom.config()
 
         self.set_default_config()
-
 
         # Update configuration
         for attr, val in config.items():
@@ -32,7 +35,7 @@ class Vehicle:
         # truck: 0.05
         # bus: 0.05
         # motorcycle: 0.7
-        self.vehicleType = np.random.choice(vehicleTypes, p=[1, 0, 0, 0])
+        self.vehicleType = np.random.choice(vehicleTypes, p=self.configCustom.vehicles)
         # self.vehicleType = vehicleTypes[self.roadIndex % 4]
         # print(self.vehicleType)
         if(self.vehicleType == "car"):
