@@ -31,7 +31,7 @@ class VehicleCounter:
         class_counts[7] * self.cnt_ratio[1] 
       )
       print(f"Final weighted count : {res}")
-      return res
+      return res,(class_counts[2],class_counts[3],class_counts[5],class_counts[7])
     except FileNotFoundError as e:
       print(f"Error: File not found. Please check the path. Details: {e}")
     except Exception as e:
@@ -40,5 +40,5 @@ class VehicleCounter:
   def countMultiple(self,image_paths):
     result = []
     for img_path in image_paths:
-      result.append(self.count(img_path))
+      result.append(self.count(img_path)[0])
     return result
