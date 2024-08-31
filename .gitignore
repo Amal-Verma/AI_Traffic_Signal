@@ -24,4 +24,4 @@ my_test.ipynb
 .venv
 .venv/
 
-yolov5s.pt
+**/yolov5s.pt
