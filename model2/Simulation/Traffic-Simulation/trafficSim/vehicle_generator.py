@@ -1,6 +1,15 @@
 from .vehicle import Vehicle
 from numpy.random import choice
 
+import sys
+import os
+
+# Add the path to the 'Algorithm' directory
+sys.path.insert(1, os.path.abspath(os.path.join(__file__, './../')))
+
+# Now import the CycleCalc module
+import configCustom
+
 
 class VehicleGenerator:
     def __init__(self, sim, config={}):
@@ -25,10 +34,13 @@ class VehicleGenerator:
         #                    [12, 13, 14, 29, 30, 31, 47, 48, 49, 50],
         #                    [18, 19, 20, 35, 36, 37, 51, 52, 53, 54]]
         
-        self.roadIndexs = [[3, 21, 22, 41], 
-                           [7, 25, 26, 44],
-                           [12, 29, 30, 47],
-                           [18, 35, 36, 51]]
+        self.roadIndexs = [[3, 21, 41], 
+                           [7, 25, 44],
+                           [12, 29, 47],
+                           [18, 35, 51]]
+        
+        # print(config)
+        self.config = configCustom.config()
 
         # Calculate properties
         self.init_properties()
@@ -48,8 +60,8 @@ class VehicleGenerator:
         """Returns a random vehicle from self.vehicles with random proportions"""
         total = sum(pair[0] for pair in self.vehicles)
         # r = randint(1, total+1)
-        rLane = self.roadIndexs[choice(range(len(self.roadIndexs)), p=[0.55, 0.10, 0.10, 0.25])]
-        r = choice(rLane)
+        rLane = self.roadIndexs[choice(range(len(self.roadIndexs)), p=self.config.pRoad)]
+        r = choice(rLane, p=self.config.pLane)
         # print(r, total)
 
         for (weight, config) in self.vehicles:
