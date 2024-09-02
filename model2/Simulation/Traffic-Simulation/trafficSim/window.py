@@ -16,7 +16,7 @@ class Window:
         
     def set_default_config(self):
         """Set default configuration"""
-        self.width = 1200
+        self.width = 800
         self.height = 700
         self.bg_color = (250, 250, 250)
 
