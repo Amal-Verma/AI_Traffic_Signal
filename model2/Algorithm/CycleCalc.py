@@ -16,7 +16,7 @@ class Manager:
       cycle = [
           (False, True, False, False, False, False, False, True, False, False, False, False),
           (False, False, False, False, False, False, False, False, False, False, False, False),
-          (False, False, False, False, True, False, False, False, False, False, True, False),
+          (False, False, False, False, True,False, False, False, False, False, True, False),
           (False, False, False, False, False, False, False, False, False, False, False, False),
           (True, True, True, False, False, False, False, False, False, False, False, True),
           (False, False, False, False, False, False, False, False, False, False, False, False),
@@ -55,7 +55,60 @@ class Manager:
       timer = self.prefix_sum(timer)
       self.prev = cars[:]
       return cycle, timer
+  
+  def call3(self, cars):
+      # print("Manager called")
+      # print(cars)
+      cycle = [
+          (False, True, True, False, False, False, False, True, True, False, False, False),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, False, False, True,True, False, False, False, False, True, True),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (True, False, False, False, False, True, True, False, False, False, False, True),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, True, True, False, False, False, False, True, True, False, False),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+      ]
 
+      if (sum(cars) == 0):
+        return [(True, True, True, False, False, False, False, False, False, False, False, True),(False, False, True, True, True, True, False, False, False, False, False, False),(False, False, False, False, False, True, True, True, True, False, False, False),(False, False, False, False, False, False, False, False, True, True, True, True)], self.prefix_sum([self.cycle_time/40]*4)
+
+      avail_time = self.cycle_time - 4 * self.halt_time
+      timer = []
+      cntarr = [(cars[0]+cars[2]) / 2,(cars[1]+cars[3]) / 2,(cars[0]+cars[2]) / 2,(cars[1]+cars[3]) / 2]
+      for cnt in cntarr:
+        allot_time = avail_time * (cnt / sum(cars))
+        timer.append(allot_time)
+        timer.append(self.halt_time)
+      timer = self.prefix_sum(timer)
+      return cycle,timer
+  
+  def call2(self, cars):
+      # print("Manager called")
+      # print(cars)
+      cycle = [
+          (True, True, True, False, False, False, False, False, False, False, False, True),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, True, True, True, True, False, False, False, False, False, False),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, False, False, False, True, True, True, True, False, False, False),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+          (False, False, False, False, False, False, False, False, True, True, True, True),
+          (False, False, False, False, False, False, False, False, False, False, False, False),
+      ]
+
+      if (sum(cars) == 0):
+        return [(True, True, True, False, False, False, False, False, False, False, False, True),(False, False, True, True, True, True, False, False, False, False, False, False),(False, False, False, False, False, True, True, True, True, False, False, False),(False, False, False, False, False, False, False, False, True, True, True, True)], self.prefix_sum([self.cycle_time/40]*4)
+
+      avail_time = self.cycle_time - 4 * self.halt_time
+      timer = []
+      for cnt in cars:
+        allot_time = avail_time * (cnt / sum(cars))
+        timer.append(allot_time)
+        timer.append(self.halt_time)
+      timer = self.prefix_sum(timer)
+      return cycle,timer
+  
   def helper(self, cars,cycle):
       if (sum(cars) == 0):
           return [cycle/len(cars)]*len(cars)
