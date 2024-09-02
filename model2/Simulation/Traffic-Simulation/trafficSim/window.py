@@ -327,8 +327,12 @@ class Window:
         temp = 0
         newRoads = [[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]]
         newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in newRoads]
+        newCounts = list(self.sim.carsCount)
+        for i in range(len(newCounts)):
+            newCounts[i] = max(newRoads[i],newCounts[i])
+        # print(f"Updating car counts : from {self.sim.carsCount}  to {newCounts}, newconnts : {newCounts}")
         # self.sim.carCount = newRoads
-        self.sim.update_cars_count(newRoads)
+        self.sim.update_cars_count(newCounts)
         for i in range(len(newRoads)):
             # road = newRoads[i]
             # print(len(self.sim.roads))

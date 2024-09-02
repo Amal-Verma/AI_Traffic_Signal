@@ -60,10 +60,16 @@ class TrafficSignal:
             if self.current_cycle_index >= len(self.cycle):
                 self.current_cycle_index = 0
                 self.model2.counter = 0
-
+                
                 self.cycle, self.timer = self.model2.call(sim.carsCount)
+                sim.update_cars_count([0,0,0,0])
                 print(self.cycle)
+                print(sim.carsCount)
                 print(self.timer)
+                newarr = list(self.timer)
+                for i in reversed(range(1,len(self.timer))):
+                    newarr[i] -= newarr[i-1]
+                print(newarr)
 
         if(len(self.roads) < 4):
             self.current_cycle_index = 3
