@@ -326,9 +326,21 @@ class Window:
 
         temp = 0
         newRoads = [[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]]
+        newlanes = [[len(self.sim.roads[i].vehicles) for i in road] for road in newRoads]
         newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in newRoads]
+        newCounts = list(self.sim.carsCount)
+        for i in range(len(newCounts)):
+            newCounts[i] = max(newRoads[i],newCounts[i])
+        newLanewiseCounts = list(self.sim.lanewiseCount)
+        for i in range(4):
+            for j in range(3):
+                newLanewiseCounts[i][j] = max(newLanewiseCounts[i][j],newlanes[i][j])
+        # print(f"Updating car counts : from {self.sim.carsCount}  to {newCounts}, newconnts : {newCounts}")
         # self.sim.carCount = newRoads
-        self.sim.update_cars_count(newRoads)
+        # print(f"l : {newlanes}")
+        # print(f"lanewise cnt : {newLanewiseCounts}")
+        self.sim.update_cars_count(newCounts)
+        self.sim.update_lanewise_count(newLanewiseCounts)
         for i in range(len(newRoads)):
             # road = newRoads[i]
             # print(len(self.sim.roads))
