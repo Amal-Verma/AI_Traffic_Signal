@@ -7,14 +7,14 @@ sys.path.append(os.path.abspath(os.path.join('..')))
 from model1.VehicleCounter import VehicleCounter
 vehicle_counter = VehicleCounter()
 
-# Initialize the main window
+# initialize the main window
 root = tk.Tk()
 root.title("Vehicle Counter")
 # root.geometry("1200x800")
 # root.attributes("-fullscreen", True)
 root.state("zoomed")
 
-# Load and place the central intersection image
+# load and place the central intersection image
 intersection_image = Image.open(f"{IMAGE_FOLDER_PATH}/intersection.png")
 intersection_image = intersection_image.resize((100, 100), Image.Resampling.LANCZOS)
 intersection_img = ImageTk.PhotoImage(intersection_image)
@@ -29,7 +29,7 @@ image_paths = {
     "West": None
 }
 
-# Function to upload and display images
+# function to upload and display images
 def upload_image(panel,direction):
     file_path = filedialog.askopenfilename()
     if file_path:
@@ -38,9 +38,9 @@ def upload_image(panel,direction):
         image = image.resize((400,300), Image.Resampling.LANCZOS)  # Resize image to fit panel
         img = ImageTk.PhotoImage(image)
         panel.config(image=img, text="")
-        panel.image = img  # Keep reference to avoid garbage collection
+        panel.image = img  # keep reference to avoid garbage collection
 
-# Create panels for images
+# create panels for images
 north_panel = tk.Label(root, text="North Image", bg="gray")
 north_panel.place(relx=0.5, rely=0.19, anchor=tk.CENTER)
 north_label = tk.Label(root, text="", font=("Arial", 12))
@@ -61,7 +61,7 @@ west_panel.place(relx=0.2, rely=0.55, anchor=tk.CENTER)
 west_label = tk.Label(root, text="", font=("Arial", 12))
 west_label.place(relx=0.07, rely=0.82, anchor=tk.W)
 
-# Buttons for uploading images
+# buttons for uploading images
 upload_north_button = tk.Button(root, text="Upload North Image", command=lambda: upload_image(north_panel,"North"))
 upload_north_button.place(relx=0.5, rely=0.41, anchor=tk.CENTER)
 
@@ -74,7 +74,7 @@ upload_east_button.place(relx=0.8, rely=0.33, anchor=tk.CENTER)
 upload_west_button = tk.Button(root, text="Upload West Image", command=lambda: upload_image(west_panel,"West"))
 upload_west_button.place(relx=0.2, rely=0.33, anchor=tk.CENTER)
 
-# Function to replace images with vehicle count results
+# function to replace images with vehicle count results
 def count_vehicles():
     for panel,label,direction in zip([north_panel, south_panel, east_panel, west_panel],
                                 [north_label, south_label, east_label, west_label], 
@@ -93,9 +93,9 @@ def count_vehicles():
         result += f"\n\nWeighted Count: {total}"
         label.config(text=result, bg='#cccccc')
 
-# 'COUNT' button to trigger the vehicle counting
+# count button to trigger the vehicle counting
 count_button = tk.Button(root, text="COUNT", command=count_vehicles)
 count_button.place(relx=0.75, rely=0.15, anchor=tk.CENTER)
 
-# Start the Tkinter loop
+# start the Tkinter loop
 root.mainloop()
