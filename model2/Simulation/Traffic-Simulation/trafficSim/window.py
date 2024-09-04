@@ -327,10 +327,10 @@ class Window:
 
         temp = 0
         nRoads = [[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]]
-        newlanes = [[len(self.sim.roads[i].vehicles) for i in road] for road in newRoads]
+        newlanes = [[len(self.sim.roads[i].vehicles) for i in road] for road in nRoads]
         newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in nRoads]
 
-        metric = self.text_font.render(f'Metric={
+        metric = self.text_font.render(f'Metric = {
             sum([sum([sum([x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads])
         }', False, (0, 0, 0))
 
@@ -361,7 +361,7 @@ class Window:
             self.screen.blit(roadformat(f'Road {i} Vehicles', newRoads[i]), (50 + 300 * r, 60 + 20*c))
             temp += 1
 
-        self.screen.blit(metric, (200 + 300, 60 + 20))
+        self.screen.blit(metric, (200 + 300, 60))
         # self.screen.blit(tp[0], (5, 260 + 20))
         # self.screen.blit(tp[1], (5, 260 + 120))
         # self.screen.blit(tp[2], (5, 260 + 220))
