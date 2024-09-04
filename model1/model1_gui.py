@@ -33,7 +33,7 @@ def upload_image(panel,direction):
     if file_path:
         image_paths[direction] = file_path
         image = Image.open(file_path)
-        image = image.resize((150, 150), Image.Resampling.LANCZOS)  # resize image to fit panel
+        image = image.resize((400, 300), Image.Resampling.LANCZOS)  # resize image to fit panel
         img = ImageTk.PhotoImage(image)
         panel.config(image=img, text="")
         panel.image = img  # keep reference to avoid garbage collection
