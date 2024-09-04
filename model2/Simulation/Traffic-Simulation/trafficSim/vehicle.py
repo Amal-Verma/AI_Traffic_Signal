@@ -20,6 +20,9 @@ class Vehicle:
 
         self.set_default_config()
 
+        self.numStop = 0
+        self.FirstStop = False
+
         # Update configuration
         for attr, val in config.items():
             setattr(self, attr, val)
@@ -109,8 +112,10 @@ class Vehicle:
 
         if self.stopped: 
             self.a = -self.b_max*self.v/self.v_max
+
         
     def stop(self):
+        # if not self.stopped: self.numStop += 1
         self.stopped = True
 
     def unstop(self):
@@ -121,5 +126,14 @@ class Vehicle:
 
     def unslow(self):
         self.v_max = self._v_max
+
+    def metric(self):
+        eps = 0.1
+        if self.v >= -eps and self.v <= eps and self.FirstStop == False:
+            self.FirstStop = True
+            self.numStop += 1
+            # print("Number of Stops: ", self.numStop)
+        elif self.v < -eps or self.v > eps:
+            self.FirstStop = False
         
 
