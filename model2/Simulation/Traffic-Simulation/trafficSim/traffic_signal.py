@@ -6,11 +6,13 @@ sys.path.insert(1, os.path.abspath(os.path.join(__file__, './../../../../Algorit
 
 # Now import the CycleCalc module
 import CycleCalc
+import CycleCalc2
 
 
 class TrafficSignal:
     def __init__(self, roads, config={}):
-        self.model2 = CycleCalc.Manager()
+        # self.model2 = CycleCalc.Manager()
+        self.model2 = CycleCalc2.Manager()
         # Initialize roads
         self.roads = roads
         # Set default configuration
@@ -61,10 +63,13 @@ class TrafficSignal:
                 self.current_cycle_index = 0
                 self.model2.counter = 0
                 
-                self.cycle, self.timer = self.model2.call(sim.carsCount)
-                sim.update_cars_count([0,0,0,0])
-                print(self.cycle)
+                # self.cycle, self.timer = self.model2.call(sim.carsCount)
+                self.cycle, self.timer = self.model2.call(sim.carsCount,sim.lanewiseCount)
                 print(sim.carsCount)
+                print(sim.lanewiseCount)
+                sim.update_cars_count([0,0,0,0])
+                sim.update_lanewise_count([[0,0,0], [0,0,0], [0,0,0], [0,0,0]])
+                print(self.cycle)
                 print(self.timer)
                 newarr = list(self.timer)
                 for i in reversed(range(1,len(self.timer))):

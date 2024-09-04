@@ -12,6 +12,7 @@ class Simulation:
 
     def __init__(self, config={}):
         self.carsCount = [0,0,0,0]
+        self.lanewiseCount = [[0,0,0], [0,0,0], [0,0,0], [0,0,0]]
 
         # Set default configuration
         self.set_default_config()
@@ -22,6 +23,9 @@ class Simulation:
     
     def update_cars_count(self, carsCount):
         self.carsCount = carsCount
+    
+    def update_lanewise_count(self,lanewiseCount):
+        self.lanewiseCount = lanewiseCount
 
     def set_default_config(self):
         self.t = 0.0            # Time keeping
