@@ -27,6 +27,8 @@ class Vehicle:
         for attr, val in config.items():
             setattr(self, attr, val)
 
+        self.timeSpent = 0
+
         # Calculate properties
         self.init_properties()
 
@@ -92,6 +94,7 @@ class Vehicle:
 
     def update(self, lead, dt):
         delta_a = 2
+        self.timeSpent += dt
         # Update position and velocity
         if self.v + self.a*dt < 0:
             self.x -= 1/2*self.v*self.v/self.a

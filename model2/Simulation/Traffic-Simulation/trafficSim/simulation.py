@@ -90,7 +90,8 @@ class Simulation:
                 else:
                     Simulation.vehiclesPassed += 1
                 # In all cases, remove it from its road
-                road.vehicles.popleft() 
+                # print("poped", road.vehicles.popleft())
+                road.vehicles.popleft()
 
                 # if vehicle reached the end of the path
                 # if vehicle.current_road_index + 1 == len(vehicle.path):

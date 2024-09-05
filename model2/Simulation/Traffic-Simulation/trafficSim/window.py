@@ -2,6 +2,9 @@ import pygame
 from pygame import gfxdraw
 import numpy as np
 
+def avg(l):
+    return sum(l) / len(l) if len(l) > 0 else 0
+
 class Window:
     def __init__(self, sim, config={}):
         # Simulation to draw
@@ -331,7 +334,8 @@ class Window:
         newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in nRoads]
 
         metric = self.text_font.render(f'Metric = {
-            sum([sum([sum([x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads])
+            round(max([max([max([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
+            3)
         }', False, (0, 0, 0))
 
         # print([[[x.numStop for x in self.sim.roads[i].vehicles] for i in road] for road in nRoads])
