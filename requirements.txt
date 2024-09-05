@@ -1,3 +1,5 @@
+supervision
+
 # Specific pyzmq version
 pyzmq==25.1.2
 

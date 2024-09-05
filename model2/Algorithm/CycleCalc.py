@@ -28,16 +28,16 @@ class Manager:
           (False, False, False, False, False, False, False, False, False, False, False, False),
       ]
 
-      timer = [(self.cycle_time-6*self.halt_time)/8]*4+[(self.cycle_time-6*self.halt_time)/4]*2
-      timer = [timer[0],self.halt_time,timer[1],self.halt_time,timer[2],self.halt_time,timer[3],self.halt_time,timer[4],self.halt_time,timer[5],self.halt_time]
-      return [(False, True, False, False, False, False, False, True, False, False, False, False),
-          (False, False, False, False, False, False, False, False, False, False, False, False),
-          (False, False, False, False, True, False, False, False, False, False, True, False),
-          (False, False, False, False, False, False, False, False, False, False, False, False),(True, True, True, False, False, False, False, False, False, False, False, True),
-          (False, False, False, False, False, False, False, False, False, False, False, False),(False, False, True, True, True, True, False, False, False, False, False, False),
-          (False, False, False, False, False, False, False, False, False, False, False, False),(False, False, False, False, False, True, True, True, True, False, False, False),
-          (False, False, False, False, False, False, False, False, False, False, False, False),(False, False, False, False, False, False, False, False, True, True, True, True),
-          (False, False, False, False, False, False, False, False, False, False, False, False)],self.prefix_sum(timer)
+      # timer = [(self.cycle_time-6*self.halt_time)/8]*4+[(self.cycle_time-6*self.halt_time)/4]*2
+      # timer = [timer[0],self.halt_time,timer[1],self.halt_time,timer[2],self.halt_time,timer[3],self.halt_time,timer[4],self.halt_time,timer[5],self.halt_time]
+      # return [(False, True, False, False, False, False, False, True, False, False, False, False),
+      #     (False, False, False, False, False, False, False, False, False, False, False, False),
+      #     (False, False, False, False, True, False, False, False, False, False, True, False),
+      #     (False, False, False, False, False, False, False, False, False, False, False, False),(True, True, True, False, False, False, False, False, False, False, False, True),
+      #     (False, False, False, False, False, False, False, False, False, False, False, False),(False, False, True, True, True, True, False, False, False, False, False, False),
+      #     (False, False, False, False, False, False, False, False, False, False, False, False),(False, False, False, False, False, True, True, True, True, False, False, False),
+      #     (False, False, False, False, False, False, False, False, False, False, False, False),(False, False, False, False, False, False, False, False, True, True, True, True),
+      #     (False, False, False, False, False, False, False, False, False, False, False, False)],self.prefix_sum(timer)
 
       if (sum(cars) == 0):
         return [(True, True, True, False, False, False, False, False, False, False, False, True),(False, False, True, True, True, True, False, False, False, False, False, False),(False, False, False, False, False, True, True, True, True, False, False, False),(False, False, False, False, False, False, False, False, True, True, True, True)], self.prefix_sum([self.cycle_time/40]*4)

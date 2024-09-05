@@ -2,6 +2,9 @@ import pygame
 from pygame import gfxdraw
 import numpy as np
 
+def avg(l):
+    return sum(l) / len(l) if len(l) > 0 else 0
+
 class Window:
     def __init__(self, sim, config={}):
         # Simulation to draw
@@ -311,6 +314,7 @@ class Window:
         text_vehicle_rate = self.text_font.render(f'Vehicle Rate={self.sim.vehicleRate}', False, (0, 0, 0))
 
         roadformat = lambda x, y: self.text_font.render(f'{x} = {y}', False, (0, 0, 0))
+
         # vehicleRoadIndex = self.text_font.render(f'Road Index = {self.sim.generators[0].roadIndexs}', False, (0, 0, 0))
         #add white rectangle
         self.screen.fill((255, 255, 255), (0, 0, 1400, 40))
@@ -325,9 +329,19 @@ class Window:
         # self.screen.blit(vehicleRoadIndex, (400, 20))
 
         temp = 0
-        newRoads = [[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]]
-        newlanes = [[len(self.sim.roads[i].vehicles) for i in road] for road in newRoads]
-        newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in newRoads]
+        nRoads = [[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]]
+        newlanes = [[len(self.sim.roads[i].vehicles) for i in road] for road in nRoads]
+        newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in nRoads]
+
+        metric = self.text_font.render(f'Metric = {
+            round(max([max([max([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
+            3)
+        }', False, (0, 0, 0))
+
+        # print([[[x.numStop for x in self.sim.roads[i].vehicles] for i in road] for road in nRoads])
+
+        # tp =  [self.text_font.render(f'tp={[[[x.numStop for x in self.sim.roads[i].vehicles] for i in road] for road in nRoads][i]}', False, (0, 0, 0)) for i in range(4)]
+
         newCounts = list(self.sim.carsCount)
         for i in range(len(newCounts)):
             newCounts[i] = max(newRoads[i],newCounts[i])
@@ -350,6 +364,12 @@ class Window:
             # if len(road.vehicles) > 0:
             self.screen.blit(roadformat(f'Road {i} Vehicles', newRoads[i]), (50 + 300 * r, 60 + 20*c))
             temp += 1
+
+        self.screen.blit(metric, (200 + 300, 60))
+        # self.screen.blit(tp[0], (5, 260 + 20))
+        # self.screen.blit(tp[1], (5, 260 + 120))
+        # self.screen.blit(tp[2], (5, 260 + 220))
+        # self.screen.blit(tp[3], (5, 260 + 320))
 
         if self.sim.isPaused:
             text_pause = self.text_font.render(f'Play', False, (0, 0, 0))

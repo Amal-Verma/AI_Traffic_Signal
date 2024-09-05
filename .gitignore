@@ -25,3 +25,4 @@ my_test.ipynb
 .venv/
 
 **/yolov5s.pt
+**/yolov8s.pt
