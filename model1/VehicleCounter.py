@@ -113,7 +113,7 @@ class VehicleCounter:
 
 if __name__ == "__main__":
   vc = VehicleCounter()
-  image_path = '../assets/examples/images/north.jpg'
+  image_path = '../assets/examples/images/south.jpg'
   left_count, middle_count, right_count = vc.count_lanewise(image_path)
   print(f"Left lane count: {left_count}")
   print(f"Middle lane count: {middle_count}")
