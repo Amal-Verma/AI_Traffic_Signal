@@ -6,3 +6,7 @@ class config():
     self.vehicles = [0.4, 0.2, 0.2, 0.2]
 
     self.vehicle_rate = 75
+
+class metrix():
+  def __init__(self):
+    self.fuel = 0

@@ -67,7 +67,7 @@ class VehicleGenerator:
         for (weight, config) in self.vehicles:
             r -= weight
             if r <= 0:
-                return Vehicle(config)
+                return Vehicle(self.sim.metricCommon,config)
 
     def update(self):
         """Add vehicles"""

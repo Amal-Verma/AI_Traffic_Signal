@@ -5,14 +5,18 @@ from .traffic_signal import TrafficSignal
 import csv
 
 class Simulation:
-    vehiclesPassed = 0;
-    vehiclesPresent = 0;
-    vehicleRate = 0;
-    isPaused = False;
+    vehiclesPassed = 0
+    vehiclesPresent = 0
+    vehicleRate = 0
+    isPaused = False
 
-    def __init__(self, config={}):
+    def __init__(self,metricCommon, config={}):
         self.carsCount = [0,0,0,0]
         self.lanewiseCount = [[0,0,0], [0,0,0], [0,0,0], [0,0,0]]
+
+        self.metricCommon = metricCommon
+
+        # self.fuel = 0
 
         # Set default configuration
         self.set_default_config()

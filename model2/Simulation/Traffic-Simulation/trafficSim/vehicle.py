@@ -13,10 +13,11 @@ CYAN = (0, 255, 255)
 PURPLE = (255, 0, 255)
 
 class Vehicle:
-    def __init__(self, config={}):
+    def __init__(self,metricCommon, config={}):
         # self.roadIndex = roadIndex
         # Set default configuration
         self.configCustom = configCustom.config()
+        self.metricCommon = metricCommon
 
         self.set_default_config()
 
@@ -135,6 +136,7 @@ class Vehicle:
         if self.v >= -eps and self.v <= eps and self.FirstStop == False:
             self.FirstStop = True
             self.numStop += 1
+            self.metricCommon.fuel += 1
             # print("Number of Stops: ", self.numStop)
         elif self.v < -eps or self.v > eps:
             self.FirstStop = False

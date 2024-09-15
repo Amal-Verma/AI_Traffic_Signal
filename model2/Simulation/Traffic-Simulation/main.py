@@ -3,9 +3,11 @@ from trafficSim import *
 import csv
 import configCustom
 
-sim = Simulation()
 
 customConfig = configCustom.config()
+metricCommon = configCustom.metrix()
+
+sim = Simulation(metricCommon)
 
 # Play with these
 n = 20      # Iterations for road turns

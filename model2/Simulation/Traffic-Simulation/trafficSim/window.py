@@ -338,6 +338,12 @@ class Window:
             3)
         }', False, (0, 0, 0))
 
+        # fuel = self.text_font.render(f'Fuel = {
+        #     round(sum([sum([sum([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
+        #     3)
+        # }', False, (0, 0, 0))        
+        fuel = self.text_font.render(f'Fuel = {self.sim.metricCommon.fuel}', False, (0, 0, 0))
+
         # print([[[x.numStop for x in self.sim.roads[i].vehicles] for i in road] for road in nRoads])
 
         # tp =  [self.text_font.render(f'tp={[[[x.numStop for x in self.sim.roads[i].vehicles] for i in road] for road in nRoads][i]}', False, (0, 0, 0)) for i in range(4)]
@@ -366,6 +372,7 @@ class Window:
             temp += 1
 
         self.screen.blit(metric, (200 + 300, 60))
+        self.screen.blit(fuel, (200 + 300, 160))
         # self.screen.blit(tp[0], (5, 260 + 20))
         # self.screen.blit(tp[1], (5, 260 + 120))
         # self.screen.blit(tp[2], (5, 260 + 220))
