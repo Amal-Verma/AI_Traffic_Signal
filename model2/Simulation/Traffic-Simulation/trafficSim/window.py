@@ -343,15 +343,17 @@ class Window:
         fuel = small_font.render(f'Fuel consumption overall = {self.sim.metricCommon.fuel} units', False, (0, 0, 0))
 
         # Position the metrics close to each other
+        fuel_stop = small_font.render(f'Fuel consumption at stops = {self.sim.metricCommon.fuelStop} units', False, (0, 0, 0))
         self.screen.blit(metric, (200 + 300, 60))
         self.screen.blit(fuel, (200 + 300, 80))
+        self.screen.blit(fuel_stop, (200 + 300, 100))
 
         # fuel = self.text_font.render(f'Fuel = {
         #     round(sum([sum([sum([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
         #     3)
         # }', False, (0, 0, 0))        
         # fuel = self.text_font.render(f'Fuel = {round(self.sim.metricCommon.fuel, 3)}', False, (0, 0, 0))
-        fuelStop = self.text_font.render(f'Fuel Stop = {round(self.sim.metricCommon.fuelStop, 3)}', False, (0, 0, 0))
+        # fuelStop = self.text_font.render(f'Fuel Stop = {round(self.sim.metricCommon.fuelStop, 3)}', False, (0, 0, 0))
         # fuel = self.text_font.render(f'Fuel consumption overall = {self.sim.metricCommon.fuel} units', False, (0, 0, 0))
 
         # print([[[x.numStop for x in self.sim.roads[i].vehicles] for i in road] for road in nRoads])
@@ -381,9 +383,9 @@ class Window:
             self.screen.blit(roadformat(f'Road {i} Vehicles', newRoads[i]), (50 + 300 * r, 60 + 20*c))
             temp += 1
 
-        self.screen.blit(metric, (200 + 300, 60))
-        self.screen.blit(fuel, (200 + 300, 90))
-        self.screen.blit(fuelStop, (200 + 300, 120))
+        # self.screen.blit(metric, (200 + 300, 60))
+        # self.screen.blit(fuel, (200 + 300, 90))
+        # self.screen.blit(fuel_stop, (200 + 300, 120))
         # self.screen.blit(tp[0], (5, 260 + 20))
         # self.screen.blit(tp[1], (5, 260 + 120))
         # self.screen.blit(tp[2], (5, 260 + 220))
