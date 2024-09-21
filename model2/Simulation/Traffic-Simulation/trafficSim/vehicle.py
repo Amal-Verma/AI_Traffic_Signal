@@ -24,8 +24,6 @@ class Vehicle:
         self.numStop = 0
         self.FirstStop = False
 
-        self.preV = 0
-
         # Update configuration
         for attr, val in config.items():
             setattr(self, attr, val)
@@ -89,6 +87,7 @@ class Vehicle:
         self.x = 0
         self.v = self.v_max
         self.a = 0
+        self.preV = self.v
         self.stopped = False
 
     def init_properties(self):
