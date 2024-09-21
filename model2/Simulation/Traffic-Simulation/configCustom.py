@@ -10,3 +10,4 @@ class config():
 class metrix():
   def __init__(self):
     self.fuel = 0
+    self.fuelStop = 0
