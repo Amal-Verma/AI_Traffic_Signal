@@ -333,8 +333,7 @@ class Window:
         newlanes = [[len(self.sim.roads[i].vehicles) for i in road] for road in nRoads]
         newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in nRoads]
 
-        metric = self.text_font.render(f'Metric = {
-            round(max([max([max([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
+        metric = self.text_font.render(f'Metric = {round(max([max([max([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
             3)
         }', False, (0, 0, 0))
 
@@ -342,7 +341,8 @@ class Window:
         #     round(sum([sum([sum([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
         #     3)
         # }', False, (0, 0, 0))        
-        fuel = self.text_font.render(f'Fuel = {self.sim.metricCommon.fuel}', False, (0, 0, 0))
+        fuel = self.text_font.render(f'Fuel = {round(self.sim.metricCommon.fuel, 3)}', False, (0, 0, 0))
+        fuelStop = self.text_font.render(f'Fuel Stop = {round(self.sim.metricCommon.fuelStop, 3)}', False, (0, 0, 0))
 
         # print([[[x.numStop for x in self.sim.roads[i].vehicles] for i in road] for road in nRoads])
 
@@ -372,7 +372,8 @@ class Window:
             temp += 1
 
         self.screen.blit(metric, (200 + 300, 60))
-        self.screen.blit(fuel, (200 + 300, 160))
+        self.screen.blit(fuel, (200 + 300, 90))
+        self.screen.blit(fuelStop, (200 + 300, 120))
         # self.screen.blit(tp[0], (5, 260 + 20))
         # self.screen.blit(tp[1], (5, 260 + 120))
         # self.screen.blit(tp[2], (5, 260 + 220))
