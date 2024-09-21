@@ -333,16 +333,26 @@ class Window:
         newlanes = [[len(self.sim.roads[i].vehicles) for i in road] for road in nRoads]
         newRoads = [sum([len(self.sim.roads[i].vehicles) for i in road]) for road in nRoads]
 
-        metric = self.text_font.render(f'Metric = {round(max([max([max([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
-            3)
-        }', False, (0, 0, 0))
+        # metric = self.text_font.render(f'Metric = {round(max([max([max([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
+        #     3)
+        # }', False, (0, 0, 0))
+        # Reduce font size for specific metrics
+        small_font = pygame.font.SysFont('Lucida Console', 12)
+        
+        metric = small_font.render(f'No of Max Stops per car = {round(max([max([max([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]), 3)}', False, (0, 0, 0))
+        fuel = small_font.render(f'Fuel consumption overall = {self.sim.metricCommon.fuel} units', False, (0, 0, 0))
+
+        # Position the metrics close to each other
+        self.screen.blit(metric, (200 + 300, 60))
+        self.screen.blit(fuel, (200 + 300, 80))
 
         # fuel = self.text_font.render(f'Fuel = {
         #     round(sum([sum([sum([0] + [x.numStop for x in self.sim.roads[i].vehicles]) for i in road]) for road in nRoads]),
         #     3)
         # }', False, (0, 0, 0))        
-        fuel = self.text_font.render(f'Fuel = {round(self.sim.metricCommon.fuel, 3)}', False, (0, 0, 0))
+        # fuel = self.text_font.render(f'Fuel = {round(self.sim.metricCommon.fuel, 3)}', False, (0, 0, 0))
         fuelStop = self.text_font.render(f'Fuel Stop = {round(self.sim.metricCommon.fuelStop, 3)}', False, (0, 0, 0))
+        # fuel = self.text_font.render(f'Fuel consumption overall = {self.sim.metricCommon.fuel} units', False, (0, 0, 0))
 
         # print([[[x.numStop for x in self.sim.roads[i].vehicles] for i in road] for road in nRoads])
 
