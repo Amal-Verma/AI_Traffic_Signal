@@ -87,6 +87,7 @@ signal phase.
 | `[` `]` | spawn rate down / up |
 | `1`–`4` | synthetic traffic scenario: Balanced, Morning peak, Evening peak, North corridor |
 | `5` | real measured demand from NYC DOT counts |
+| `B` | real deployed Bengaluru signal plan (third controller) |
 | `,` `.` | step the hour of day, real data only |
 | `-` `=` | simulation speed down / up |
 | `H` | show/hide the controls panel |
@@ -138,6 +139,27 @@ Note the counted days differ per approach: the East approach rests on a single
 counted day and is correspondingly noisier.
 
 The scenarios on `1`–`4` are synthetic illustrative shapes, not measurements.
+
+### The deployed Bengaluru plan
+
+Key `B` switches the controller to a **real published signal plan**: D'Souza
+Circle Junction (Victoria Rd x Campbell Rd), Bengaluru, as published by the
+Bengaluru City Traffic Police. Phase durations, the exclusive pedestrian
+all-red, the cycle lengths (80-125s) and the time-of-day switching are all as
+deployed; `,` and `.` step the hour and the plan changes period with it.
+
+Data lives in `data/bengaluru_dsouza_circle.json` with its provenance.
+
+Two honest caveats:
+
+- The published movement diagram is not machine readable, so **which**
+  approaches move in each vehicle phase is this simulation's own four-arm
+  mapping (two opposing through phases plus a protected turn phase). The
+  timings are real; the staging is ours.
+- The demand being simulated is not D'Souza Circle's actual demand. A plan
+  tuned for one junction's traffic naturally underperforms on another's, so
+  this compares *adaptive versus fixed under the same demand* — not this
+  project against Bengaluru's traffic engineers.
 
 ### Tuning
 
