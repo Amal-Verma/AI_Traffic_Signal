@@ -5,6 +5,8 @@ import os
 sys.path.insert(1, os.path.abspath(os.path.join(__file__, './../../../../Algorithm')))
 
 # Now import the CycleCalc module
+import json
+
 import CycleCalc
 import CycleCalc2
 
@@ -30,6 +32,56 @@ FIXED_CYCLE = [
     FIXED_GREENS[0], FIXED_GREENS[1], ALL_RED,
     FIXED_GREENS[2], FIXED_GREENS[3], ALL_RED,
 ]
+
+
+# Three-phase plan for the deployed timings, matching how a real four-arm
+# junction with three vehicle phases is usually staged: two opposing through
+# phases plus a protected turn phase. Signal group order is
+# W1 W2 W3  N1 N2 N3  E1 E2 E3  S1 S2 S3, and lane 3 of each approach is the
+# left-turn lane.
+#
+# Every group must appear in at least one phase, or that approach is starved
+# and its queue grows without bound.
+def _phase(*indices):
+    return tuple(i in indices for i in range(12))
+
+
+DEPLOYED_GREENS = [
+    _phase(0, 1, 6, 7),      # West + East, through lanes
+    _phase(3, 4, 9, 10),     # North + South, through lanes
+    _phase(2, 5, 8, 11),     # protected left turns, all approaches
+]
+
+assert set().union(*[{i for i, v in enumerate(p) if v} for p in DEPLOYED_GREENS]) \
+    == set(range(12)), 'deployed phases must cover every signal group'
+
+
+def load_deployed_plan(path=None):
+    """Loads a real deployed time-of-day signal plan, or None if unavailable."""
+    if path is None:
+        path = os.path.join(os.path.dirname(__file__), '..', 'data',
+                            'bengaluru_dsouza_circle.json')
+    try:
+        with open(path) as fh:
+            return json.load(fh)
+    except Exception as exc:
+        print(f'deployed plan unavailable: {exc}')
+        return None
+
+
+def _minutes(hhmm):
+    h, m = hhmm.split(':')
+    return int(h) * 60 + int(m)
+
+
+def deployed_period(plan, hour):
+    """The plan entry covering this hour, falling back to the first."""
+    now = int(hour) * 60
+    for entry in plan['plan']:
+        start, end = _minutes(entry['from']), _minutes(entry['to'])
+        if start <= now < end:
+            return entry
+    return plan['plan'][0]
 
 
 def fixed_timer(model):
@@ -71,21 +123,52 @@ class TrafficSignal:
 
         self.last_t = 0
 
-        # True  -> CycleCalc2 allocates green by measured demand
-        # False -> fixed-time baseline, even split
-        self.adaptive = True
+        # 'adaptive' -> CycleCalc2 allocates green by measured demand
+        # 'fixed'    -> even split baseline
+        # 'deployed' -> a real published time-of-day plan
+        self.mode = 'adaptive'
+        self.deployed = None
+
+    @property
+    def adaptive(self):
+        return self.mode == 'adaptive'
 
     def set_adaptive(self, adaptive):
+        self.set_mode('adaptive' if adaptive else 'fixed')
+
+    def set_mode(self, mode, hour=9):
         """Switches controller and restarts the cycle from phase 0."""
-        self.adaptive = adaptive
+        if mode == 'deployed' and self.deployed is None:
+            self.deployed = load_deployed_plan()
+            if self.deployed is None:
+                return False
+
+        self.mode = mode
         self.current_cycle_index = 0
         self.model2.counter = 0
-        if adaptive:
+
+        if mode == 'adaptive':
             # Let the next completed cycle re-seed from live counts
             self.model2.isfirstcycle = True
-        else:
+        elif mode == 'fixed':
             self.cycle = list(FIXED_CYCLE)
             self.timer = fixed_timer(self.model2)
+        else:
+            self.cycle, self.timer = self.deployed_cycle(hour)
+        return True
+
+    def deployed_cycle(self, hour):
+        """Builds the cycle for the published plan at this hour.
+
+        The three vehicle phases reuse the same conflict groupings as the
+        fixed baseline; their durations, the pedestrian all-red and the
+        cycle length come from the published plan.
+        """
+        entry = deployed_period(self.deployed, hour)
+        cycle = list(DEPLOYED_GREENS) + [ALL_RED]
+        timer = self.model2.prefix_sum(
+            list(entry['greens']) + [entry['pedestrian']])
+        return cycle, timer
 
     def init_properties(self):
         for i in range(len(self.roads)):
@@ -111,9 +194,14 @@ class TrafficSignal:
                 self.current_cycle_index = 0
                 self.model2.counter = 0
 
-                if self.adaptive:
+                if self.mode == 'adaptive':
                     # self.cycle, self.timer = self.model2.call(sim.carsCount)
                     self.cycle, self.timer = self.model2.call(sim.carsCount,sim.lanewiseCount)
+                elif self.mode == 'deployed':
+                    # Re-read the plan each cycle so stepping the hour of day
+                    # switches to the period actually in force then.
+                    self.cycle, self.timer = self.deployed_cycle(
+                        getattr(sim, 'hour', 9))
                 else:
                     # Fixed-time baseline: same phases and same total cycle
                     # length every time, regardless of what the counts say.

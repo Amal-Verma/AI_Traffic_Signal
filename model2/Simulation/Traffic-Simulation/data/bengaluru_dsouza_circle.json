@@ -1,0 +1,26 @@
+{
+ "junction": "D'Souza Circle Junction (Victoria Rd x Campbell Rd)",
+ "city": "Bengaluru",
+ "authority": "Bengaluru City Traffic Police",
+ "control": "FIXED",
+ "source": "Bengaluru City Traffic Signal Data, OpenCity urban data portal",
+ "source_url": "https://data.opencity.in/dataset/bengaluru-city-traffic-signal-data",
+ "retrieved": "2026-08-25",
+ "approaches": {
+  "A": "India Garage",
+  "B": "Campbell Road",
+  "C": "Hosmat Junction",
+  "D": "Garuda Mall"
+ },
+ "phases": 3,
+ "pedestrian_phase": true,
+ "units": "seconds",
+ "note": "Phase durations, cycle lengths and the time-of-day switching are the deployed plan as published. Which approaches move during each vehicle phase is this simulation's own four-arm mapping, since the published movement diagram is not machine readable.",
+ "plan": [
+  {"from": "07:00", "to": "08:30", "greens": [30, 20, 20], "pedestrian": 10, "cycle": 80},
+  {"from": "08:30", "to": "12:00", "greens": [55, 30, 30], "pedestrian": 10, "cycle": 125},
+  {"from": "12:00", "to": "16:00", "greens": [30, 20, 20], "pedestrian": 10, "cycle": 80},
+  {"from": "16:00", "to": "20:30", "greens": [55, 20, 20], "pedestrian": 10, "cycle": 105},
+  {"from": "20:30", "to": "23:00", "greens": [30, 20, 20], "pedestrian": 10, "cycle": 80}
+ ]
+}

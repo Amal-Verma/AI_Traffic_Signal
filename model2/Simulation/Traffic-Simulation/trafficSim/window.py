@@ -16,7 +16,7 @@ class Window:
     APPROACH_ROADS = [[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]]
     APPROACH_NAMES = ['West', 'North', 'East', 'South']
 
-    HUD_HEIGHT = 474
+    HUD_HEIGHT = 512
 
     # Must match the colours Vehicle.set_default_config assigns
     VEHICLE_LEGEND = [
@@ -268,6 +268,11 @@ class Window:
             self.scenario_name = name
             sim.reset_metrics()
 
+        elif key == pygame.K_b:
+            # Real deployed Bengaluru time-of-day plan
+            if sim.set_mode('deployed'):
+                sim.reset_metrics()
+
         elif key == pygame.K_5:
             # Real measured demand, starting at the busiest hour
             if self.load_real():
@@ -275,10 +280,16 @@ class Window:
                 sim.reset_metrics()
 
         elif key in (pygame.K_COMMA, pygame.K_PERIOD):
-            # Step through the measured 24-hour curve
+            step = 1 if key == pygame.K_PERIOD else -1
             if self.real_hour is not None:
-                step = 1 if key == pygame.K_PERIOD else -1
+                # Step through the measured 24-hour demand curve
                 self.set_real_hour((self.real_hour + step) % 24)
+                sim.reset_metrics()
+            elif sim.mode == 'deployed':
+                # No measured demand loaded, but the deployed plan still
+                # switches by time of day
+                sim.hour = (sim.hour + step) % 24
+                sim.set_mode('deployed')
                 sim.reset_metrics()
 
     def load_real(self):
@@ -294,6 +305,7 @@ class Window:
 
     def set_real_hour(self, hour):
         self.real_hour = hour % 24
+        self.sim.hour = self.real_hour       # time-of-day plans follow along
         self.real.apply(self.sim, self.real_hour)
         self.demand_source = 'measured'
         self.scenario_name = self.real.name
@@ -571,8 +583,11 @@ class Window:
         sim = self.sim
         signal = sim.traffic_signals[0] if sim.traffic_signals else None
 
-        adaptive = sim.is_adaptive
-        accent = self.C_GREEN if adaptive else self.C_AMBER
+        mode = sim.mode
+        adaptive = mode == 'adaptive'
+        accent = {'adaptive': self.C_GREEN,
+                  'fixed': self.C_AMBER,
+                  'deployed': self.C_ACCENT}.get(mode, self.C_AMBER)
 
         x, y, w = 16, 16, 286
         pad = 14
@@ -581,7 +596,10 @@ class Window:
         cy = y + pad
 
         # -- mode badge
-        label = 'ADAPTIVE  ·  AI' if adaptive else 'FIXED-TIME  ·  BASELINE'
+        label = {'adaptive': 'ADAPTIVE  ·  AI',
+                 'fixed': 'FIXED-TIME  ·  BASELINE',
+                 'deployed': 'DEPLOYED PLAN  ·  BENGALURU'}.get(
+                     mode, 'FIXED-TIME  ·  BASELINE')
         badge = self.font_bold.render(label, True, (12, 14, 20))
         bw, bh = badge.get_width() + 20, badge.get_height() + 9
         pygame.draw.rect(self.screen, accent, (cx, cy, bw, bh), border_radius=6)
@@ -597,6 +615,13 @@ class Window:
             remaining = signal.timer[signal.current_cycle_index] - signal.model2.counter
             phase = f'{signal.current_cycle_index + 1}/{len(signal.cycle)}'
             cy += self.stat_row('Phase', phase, cx, cy, cw)
+            if mode == 'deployed' and signal.deployed:
+                from .traffic_signal import deployed_period
+                entry = deployed_period(signal.deployed, sim.hour)
+                cy += self.stat_row('Plan period',
+                                    f"{entry['from']}-{entry['to']}", cx, cy, cw)
+                cy += self.stat_row('Cycle length', f"{entry['cycle']:6d}s",
+                                    cx, cy, cw)
             cy += self.stat_row('Green remaining', f'{max(0.0, remaining):5.1f}s',
                                 cx, cy, cw, accent)
 
@@ -678,6 +703,7 @@ class Window:
             ('[  ]', 'spawn rate down / up'),
             ('1-4', 'synthetic scenario preset'),
             ('5', 'real measured demand (NYC)'),
+            ('B', 'deployed Bengaluru plan'),
             (',  .', 'hour of day, real data'),
             ('-  =', 'sim speed down / up'),
             ('H', 'hide this panel'),

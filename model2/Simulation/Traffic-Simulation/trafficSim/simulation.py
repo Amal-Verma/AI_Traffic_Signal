@@ -36,6 +36,7 @@ class Simulation:
     def set_default_config(self):
         self.t = 0.0            # Time keeping
         self.metrics_t0 = 0.0   # Time the current measurement window started
+        self.hour = 9           # Hour of day, for time-of-day signal plans
         self.frame_count = 0    # Frame count keeping
         self.dt = 1/60          # Simulation time step
         self.roads = []         # Array to store roads
@@ -180,8 +181,20 @@ class Simulation:
 
     def set_adaptive(self, adaptive):
         """Switches every signal between the adaptive and fixed-time controller."""
+        self.set_mode('adaptive' if adaptive else 'fixed')
+
+    def set_mode(self, mode):
+        """Switches every signal to 'adaptive', 'fixed' or 'deployed'."""
+        ok = True
         for signal in self.traffic_signals:
-            signal.set_adaptive(adaptive)
+            ok = signal.set_mode(mode, self.hour) and ok
+        return ok
+
+    @property
+    def mode(self):
+        if not self.traffic_signals:
+            return 'adaptive'
+        return self.traffic_signals[0].mode
 
     @property
     def is_adaptive(self):
