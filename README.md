@@ -197,9 +197,15 @@ This runs at roughly **4.6 fps on CPU**, about 6x slower than realtime, so it
 is not suitable for live demonstration. A pre-rendered output is kept at
 `assets/demo/tracking_demo.mp4`.
 
-Note the bundled sample clip is motorway footage, not Indian junction traffic;
-the line-crossing counts it produces are not what the signal controller
-consumes (that reads per-approach queue counts from stills).
+The pre-rendered demo runs on `assets/examples/videos/india_crossroads.mp4`,
+a real Indian crossroads with motorcycles, auto-rickshaws, buses and cars.
+Provenance and licensing are recorded in `assets/demo/SOURCES.md`.
+
+Note the line-crossing counts it produces are not what the signal controller
+consumes — that reads per-approach queue counts from stills. The tracker
+demonstrates how counts would be obtained from a live camera feed.
+
+Auto-rickshaws are visibly missed in the output: COCO has no such class.
 
 ### As a library
 
