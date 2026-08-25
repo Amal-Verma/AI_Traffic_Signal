@@ -57,6 +57,8 @@ class Road:
                     # Stop vehicles in the stop zone
                     self.vehicles[0].stop()
 
-                for vehicle in self.vehicles:
-                    vehicle.metric()
+            # Accumulate metrics every step, not only under a red light,
+            # otherwise fuel burnt accelerating on green is never counted.
+            for vehicle in self.vehicles:
+                vehicle.metric(dt)
 

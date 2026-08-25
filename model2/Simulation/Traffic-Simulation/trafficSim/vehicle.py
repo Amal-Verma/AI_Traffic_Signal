@@ -134,9 +134,19 @@ class Vehicle:
     def unslow(self):
         self.v_max = self._v_max
 
-    def metric(self):
+    def metric(self, dt=0):
         self.metricCommon.fuel += max(0, self.v - self.preV)
+
+        # Delay is the time lost relative to travelling at free-flow speed.
+        # Integrating (1 - v/v_free) each step gives the standard measure and
+        # needs no per-path bookkeeping, so it survives road-to-road hops.
+        if self._v_max > 0:
+            self.metricCommon.delay += dt * (1 - min(1.0, self.v / self._v_max))
+
         eps = 0.1
+        if -eps <= self.v <= eps:
+            self.metricCommon.waitTime += dt
+
         if self.v >= -eps and self.v <= eps and self.FirstStop == False:
             self.FirstStop = True
             self.numStop += 1

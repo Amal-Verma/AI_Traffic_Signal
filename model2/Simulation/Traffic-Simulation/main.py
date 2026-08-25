@@ -17,7 +17,8 @@ l = 300     # Length of road
 
 NUM_OF_ROADS = 36 # Number of roads
 VEHICLE_RATE = customConfig.vehicle_rate # Vehicle spawn rate per minute
-STEPS_PER_UPDATE = 4   # Number of steps per update
+STEPS_PER_UPDATE = 10   # Simulated seconds per wall second; tune live with -/=
+                        # A 100s signal cycle then takes ~10s of demo time.
 
 # Nodes
 WEST_RIGHT_START = (-b-l, a)
@@ -339,5 +340,7 @@ sim.create_signal([[0], [12], [24], [3], [15], [27], [2], [14], [26], [1], [13],
 # Start simulation
 win = Window(sim)
 win.zoom = 4.5
+# Nudge the map clear of the HUD panel on the left
+win.offset = (34, 0)
 if(sim.isPaused == False):
     win.run(steps_per_update=STEPS_PER_UPDATE)
