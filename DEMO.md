@@ -107,6 +107,21 @@ stronger claim anyway.
 
 ---
 
+## 5b · Against a real deployed plan (optional, 1 min)
+
+Press **`B`**. The badge turns blue: **DEPLOYED PLAN · BENGALURU** — the
+published fixed-time plan for D'Souza Circle Junction, Bengaluru, showing the
+plan period and cycle length in force. `,` and `.` step the hour and the plan
+switches period with it.
+
+This is a stronger baseline than an even split, because it is what a real
+Indian junction actually runs. Measured delay reduction against it ranges from
+about 9% to 40% depending on the time-of-day period.
+
+State the caveat yourself: the demand being simulated is not D'Souza Circle's
+own traffic, and the phase staging is our mapping since the published movement
+diagram is not machine readable. The timings and cycle lengths are real.
+
 ## 6 · Limits and next steps (1-2 min)
 
 Close on what you know is not yet solved. This is the most credible part.
@@ -119,9 +134,10 @@ Close on what you know is not yet solved. This is the most credible part.
   Fine-tune on IDD-Detection / DriveIndia.
 - **Mixed traffic.** Lane-based car-following does not model filtering, which
   is a large part of real Indian junction capacity.
-- **Real baseline.** Bengaluru Traffic Police publish deployed signal timings
-  (146-190s cycles, time-of-day plans). Beating a real deployed plan is the
-  next validation, and a stronger claim than beating an even split.
+- **Real baseline.** The deployed Bengaluru plan is now implemented (key `B`),
+  but validated against synthetic demand rather than that junction's own
+  counts. Pairing a deployed plan with its matching measured demand is the
+  next validation step.
 
 ---
 
@@ -146,7 +162,8 @@ controller currently loses, and that is visible on screen.
 | `SPACE` | pause / resume |
 | `T` | adaptive ↔ fixed-time (resets measurement window) |
 | `5` | real measured NYC demand |
-| `,` `.` | hour of day (real data only) |
+| `B` | real deployed Bengaluru plan (D'Souza Circle) |
+| `,` `.` | hour of day — steps NYC demand and the Bengaluru plan period |
 | `1`–`4` | synthetic scenarios |
 | `R` | reset measurement window |
 | `C` | clear traffic and restart |
