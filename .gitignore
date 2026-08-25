@@ -26,3 +26,10 @@ my_test.ipynb
 
 **/yolov5s.pt
 **/yolov8s.pt
+
+# Generated simulation preview (rendered from detection, not source)
+model2/Simulation/Traffic-Simulation/data/detected_preview.png
+
+# Local benchmark scratch and exported transcripts
+model2/Simulation/Traffic-Simulation/scratchpad/
+*-set-up-this-project-also-analyse-for-improvemen.txt

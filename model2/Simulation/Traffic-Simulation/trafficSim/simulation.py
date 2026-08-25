@@ -1,14 +1,16 @@
 from .road import Road
-from copy import deepcopy
 from .vehicle_generator import VehicleGenerator
 from .traffic_signal import TrafficSignal
-import csv
 
 class Simulation:
     vehiclesPassed = 0
     vehiclesPresent = 0
     vehicleRate = 0
     isPaused = False
+
+    # Entry roads per approach (lanes 1-3), order: West, North, East, South.
+    # Matches the controller's count buckets in CycleCalc2.getValDicts.
+    APPROACH_ROADS = [[0, 12, 24], [3, 15, 27], [2, 14, 26], [1, 13, 25]]
 
     def __init__(self,metricCommon, config={}):
         self.carsCount = [0,0,0,0]
@@ -33,6 +35,7 @@ class Simulation:
 
     def set_default_config(self):
         self.t = 0.0            # Time keeping
+        self.metrics_t0 = 0.0   # Time the current measurement window started
         self.frame_count = 0    # Frame count keeping
         self.dt = 1/60          # Simulation time step
         self.roads = []         # Array to store roads
@@ -70,32 +73,36 @@ class Simulation:
         for gen in self.generators:
             gen.update()
 
+        # Feed the per-approach queue counts the signal controller reads.
+        # Kept as peak-hold over the cycle: the controller zeroes these each
+        # time it recomputes, so this records the worst queue since then.
+        # This was previously done inside window.py's draw_status(), tying
+        # control logic to rendering — headless runs got no count data.
+        self._sample_counts()
+
         for signal in self.traffic_signals:
             signal.update(self)
 
         # Check roads for out of bounds vehicle
         for road in self.roads:
-            # If road has no vehicles, continue
-            if len(road.vehicles) == 0: continue
-            # If not
-            vehicle = road.vehicles[0]
-            # If first vehicle is out of road bounds
-            if vehicle.x >= road.length:
+            # Several vehicles can clear the road in one step, so drain them all
+            while len(road.vehicles) > 0 and road.vehicles[0].x >= road.length:
+                vehicle = road.vehicles[0]
+                # Remove it from its road first; it is either handed to the
+                # next road or done with its path.
+                road.vehicles.popleft()
+
                 # If vehicle has a next road
                 if vehicle.current_road_index + 1 < len(vehicle.path):
                     # Update current road to next road
                     vehicle.current_road_index += 1
-                    # Create a copy and reset some vehicle properties
-                    new_vehicle = deepcopy(vehicle)
-                    new_vehicle.x = 0
-                    # Add it to the next road
+                    # Move the same vehicle over, so its accumulated metrics
+                    # and its shared metricCommon reference survive the hop.
+                    vehicle.x = 0
                     next_road_index = vehicle.path[vehicle.current_road_index]
-                    self.roads[next_road_index].vehicles.append(new_vehicle)
+                    self.roads[next_road_index].vehicles.append(vehicle)
                 else:
                     Simulation.vehiclesPassed += 1
-                # In all cases, remove it from its road
-                # print("poped", road.vehicles.popleft())
-                road.vehicles.popleft()
 
                 # if vehicle reached the end of the path
                 # if vehicle.current_road_index + 1 == len(vehicle.path):
@@ -148,3 +155,48 @@ class Simulation:
 
     def resume(self):
         self.isPaused = False
+
+    @property
+    def metrics_elapsed(self):
+        """Seconds of simulated time since the last metrics reset."""
+        return self.t - self.metrics_t0
+
+    def reset_metrics(self):
+        """Zeroes accumulated metrics so an A/B comparison starts clean."""
+        Simulation.vehiclesPassed = 0
+        self.metricCommon.fuel = 0
+        self.metricCommon.fuelStop = 0
+        self.metricCommon.delay = 0
+        self.metricCommon.waitTime = 0
+        self.metrics_t0 = self.t
+
+    def clear_traffic(self):
+        """Empties every road, for restarting a scenario from an empty map."""
+        for road in self.roads:
+            road.vehicles.clear()
+        for gen in self.generators:
+            gen.last_added_time = self.t
+        Simulation.vehiclesPresent = 0
+
+    def set_adaptive(self, adaptive):
+        """Switches every signal between the adaptive and fixed-time controller."""
+        for signal in self.traffic_signals:
+            signal.set_adaptive(adaptive)
+
+    @property
+    def is_adaptive(self):
+        return all(s.adaptive for s in self.traffic_signals)
+
+    def _sample_counts(self):
+        """Peak-hold per-approach queue counts for the signal controller."""
+        lanewise = [[len(self.roads[i].vehicles) for i in group]
+                    for group in self.APPROACH_ROADS]
+        totals = [sum(group) for group in lanewise]
+
+        for i in range(len(self.carsCount)):
+            self.carsCount[i] = max(totals[i], self.carsCount[i])
+
+        for i in range(4):
+            for j in range(3):
+                self.lanewiseCount[i][j] = max(
+                    self.lanewiseCount[i][j], lanewise[i][j])

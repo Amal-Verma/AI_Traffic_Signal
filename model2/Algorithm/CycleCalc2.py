@@ -1,3 +1,8 @@
+import os
+
+# Set TRAFFICSIM_DEBUG=1 for the per-cycle allocation trace.
+DEBUG = bool(os.environ.get('TRAFFICSIM_DEBUG'))
+
 SIG_STATES = {
   'A' : (False, True, True, False, False, False, False, False, False, False, False, False),
   'B' : (False, False, False, False, False, False, False, True, True, False, False, False),
@@ -68,13 +73,14 @@ class Manager:
     cycle = cycle1 + cycle2
     timer = timer1 + timer2
     timer = self.prefix_sum(timer)
-    print(f"Vals1 : {vals1}")
-    print(f"siglist1 : {sig_list1}")
-    print(f"Timer1 : {timer1}")
-    print("")
-    print(f"Vals2 : {vals2}")
-    print(f"siglist2 : {sig_list2}")
-    print(f"Timer2 : {timer2}")
+    if DEBUG:
+      print(f"Vals1 : {vals1}")
+      print(f"siglist1 : {sig_list1}")
+      print(f"Timer1 : {timer1}")
+      print("")
+      print(f"Vals2 : {vals2}")
+      print(f"siglist2 : {sig_list2}")
+      print(f"Timer2 : {timer2}")
     return cycle,timer
       
   
@@ -149,19 +155,37 @@ class Manager:
 
       return timer
   
-  def adjust_distribution(self,arr):
+  MIN_SHARE = 0.15
+
+  def adjust_distribution(self, arr):
+    """Guarantees every phase a minimum green, keeping the rest proportional.
+
+    The previous version floored phases 0 and 2 by subtracting from phase 1,
+    which could drive phase 1 negative under skewed demand ([80,10,10] became
+    [80,-10,30]). A negative duration makes the prefix-summed timer run
+    backwards, so that phase was skipped entirely and its approach never got a
+    green. It also clamped every split into a narrow 30-40% band, leaving the
+    allocator almost no room to respond to demand.
+
+    Here each phase takes a fixed floor first, and whatever is left is shared
+    out in proportion to demand. The total is preserved exactly and no phase
+    can go negative.
+    """
+    n = len(arr)
     total = sum(arr)
-    min_limit = 0.3 * total
-    if arr[0] < min_limit:
-        diff = min_limit - arr[0]
-        arr[0] += diff
-        arr[1] -= diff
-    if arr[2] < min_limit:
-        diff = min_limit - arr[2]
-        arr[2] += diff
-        arr[1] -= diff
-    
-    return arr
+    if total <= 0:
+      return [0.0] * n
+
+    floor = self.MIN_SHARE * total
+    free = total - n * floor
+    weights = [max(0.0, a) for a in arr]
+    wsum = sum(weights)
+
+    if free <= 0 or wsum <= 0:
+      # Floors alone exhaust the cycle, or there is no demand to weigh by
+      return [total / n] * n
+
+    return [floor + free * w / wsum for w in weights]
   
   def adjust_two_numbers(self,arr):
     total = sum(arr)
