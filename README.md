@@ -190,6 +190,17 @@ Opens a file picker, shows the first frame so you can draw a counting line,
 then runs YOLOv8 + ByteTrack over the video and writes an annotated copy
 alongside the source. Sample video in `assets/examples/videos`.
 
+Counts every COCO vehicle class (car, motorcycle, bus, truck) — see
+`VEHICLE_CLASSES` in `VehicleTracker.py`.
+
+This runs at roughly **4.6 fps on CPU**, about 6x slower than realtime, so it
+is not suitable for live demonstration. A pre-rendered output is kept at
+`assets/demo/tracking_demo.mp4`.
+
+Note the bundled sample clip is motorway footage, not Indian junction traffic;
+the line-crossing counts it produces are not what the signal controller
+consumes (that reads per-approach queue counts from stills).
+
 ### As a library
 
 ```python

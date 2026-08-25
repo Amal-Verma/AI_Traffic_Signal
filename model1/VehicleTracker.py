@@ -9,6 +9,10 @@ import cv2
 sys.path.append(os.path.abspath(os.path.join('..')))
 from model1.my_utility import get_line_points,select_video
 
+# COCO vehicle class ids: car, motorcycle, bus, truck
+VEHICLE_CLASSES = (2, 3, 5, 7)
+
+
 def process_video(
         source_video_path: str,
         target_video_path: str,
@@ -66,8 +70,11 @@ def process_video(
             results = model(frame,verbose=False)[0]
             detections = sv.Detections.from_ultralytics(results)
 
-            # Filter detections for cars and trucks (class IDs: 2 and 7)
-            detections = detections[np.where((detections.class_id == 2) | (detections.class_id == 7))]
+            # Keep every vehicle class COCO offers: car(2), motorcycle(3),
+            # bus(5), truck(7). Filtering to cars and trucks alone discards
+            # most of the traffic in Indian conditions, where two-wheelers
+            # dominate.
+            detections = detections[np.isin(detections.class_id, VEHICLE_CLASSES)]
 
             # Update ByteTracker with detections
             detections = tracker.update_with_detections(detections)
@@ -78,7 +85,9 @@ def process_video(
             # Prepare labels for annotated frame
             labels = []
             for index in range(len(detections.class_id)):
-                labels.append(f"#{detections.tracker_id[index]} {classes[detections.class_id[index]]} {round(detections.confidence[index], 2)}")
+                labels.append(f"#{detections.tracker_id[index]} "
+                              f"{classes[detections.class_id[index]]} "
+                              f"{detections.confidence[index]:.2f}")
 
             # Trigger line counter
             line_counter.trigger(detections=detections)
@@ -88,7 +97,7 @@ def process_video(
             line_annotate_frame = line_annotator.annotate(frame=annotated_label_frame, line_counter=line_counter)
 
             # Write the annotated frame to the output video
-            sink.write_frame(frame=annotated_label_frame)
+            sink.write_frame(frame=line_annotate_frame)
     
     return line_counter.in_count, line_counter.out_count
 
